@@ -32,3 +32,6 @@ def index():
 def recipes():
     recipes = DBRecipe.query.order_by(DBRecipe.id).all()
     return "recipes" #should be a list or smth of the names from the database
+
+if __name__ == "__main__":
+    app.run(debug=True)
