@@ -26,7 +26,8 @@ def index():
 
     else:
         recipes = DBRecipe.query.order_by(DBRecipe.id).all()
-        return render_template("index.html", recipes = recipes)
+        #return render_template("index.html", recipes = recipes)
+        return "Home page"
 
 @app.route("/recipes")
 def recipes():
