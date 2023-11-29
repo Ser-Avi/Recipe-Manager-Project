@@ -60,10 +60,13 @@ Recipes.append(testRecipe2)
 def index():
     return "Hello" #TODO: figure out if this should lead to anything
 
-
 @app.route("/recipes")
 def recipes():
     return Recipes #TODO: should be a list or smth of the names from the database
+
+@app.route("/recipes/<recipe_id>")
+def recipeID(recipe_id):
+    return Recipes[int(recipe_id)].__dict__
 
 if __name__ == "__main__":
     app.run(debug=True)
