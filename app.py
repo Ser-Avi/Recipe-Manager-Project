@@ -21,7 +21,7 @@ class Recipe:
     The Recipe class holds all the information about a recipe.
     Has methods for initializing and turning into a dict.
     """
-    idKey: int                  #IDs are currently simple integer indexes
+    #idKey: int                  #IDs are currently simple integer indexes
     name: str
     tags: [str]
     timeToMake: float
@@ -41,7 +41,7 @@ testIngredients = []
 testIngredients.extend([testIngredient1, testIngredient2, testIngredient3])
 testSteps = ["Bring the water to a boil and start heating up the sauce", "Put the past in the water for 6 minutes",
              "Drain the pasta and mix it into the sauce", "Serve with some grated Parmigiano Reggiano"]
-testRecipe = Recipe(0, "Pasta with Sauce", ["entree", "Italian"], 0.20, 2, testIngredients, testSteps)
+testRecipe = Recipe("Pasta with Sauce", ["entree", "Italian"], 0.20, 2, testIngredients, testSteps)
 
 #Recipe for a reliable meal
 testIngredient4 = Ingredient("Cereal", 2, "cups")
@@ -50,7 +50,7 @@ testIngredients2 = []
 testIngredients2.extend([testIngredient4, testIngredient5])
 testSteps2 = ["Put cereal in bowl.", "Pour milk over cereal until the milk level is slightly below the top of the cereal.",
              "Serve immediately."]
-testRecipe2 = Recipe(1, "Cereal", ["breakfast", "dinner", "lunch"], 0.1, 1, testIngredients2, testSteps2)
+testRecipe2 = Recipe("Cereal", ["breakfast", "dinner", "lunch"], 0.1, 1, testIngredients2, testSteps2)
 
 Recipes.append(testRecipe)
 Recipes.append(testRecipe2)
@@ -67,6 +67,12 @@ def recipes():
 @app.route("/recipes/<recipe_id>")
 def recipeID(recipe_id):
     return Recipes[int(recipe_id)].__dict__
+
+@app.route("/submit", methods = ["Get","POST"])
+def newRecipe():
+    j = request.get_json()
+    Recipes.append(Recipe(**j))
+    return "Recipe added!"
 
 if __name__ == "__main__":
     app.run(debug=True)
