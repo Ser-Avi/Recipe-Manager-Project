@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from flask import Flask, request, redirect
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, request, redirect, send_from_directory
 import json
 
 app = Flask(__name__)
@@ -58,7 +57,11 @@ Recipes.append(testRecipe2)
 
 @app.route("/", methods = ["GET"])
 def index():
-    return "Hello" #TODO: figure out if this should lead to anything
+    return send_from_directory('static', "index.html")
+
+@app.route("/add_recipe", methods = ["GET"])
+def add_recipe():
+    return send_from_directory('static', "add_recipe.html")
 
 @app.route("/recipes")
 def recipes():
