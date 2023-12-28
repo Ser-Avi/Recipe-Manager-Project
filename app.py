@@ -1,9 +1,19 @@
 from dataclasses import dataclass
 from flask import Flask, request, redirect
-from flask_sqlalchemy import SQLAlchemy
+from flask_mongoengine import MongoEngine
 import json
 
 app = Flask(__name__)
+app.config['MONGODB_SETTINGS'] = {
+    'db': 'recipe_database',
+    'host': 'localhost',
+    'port': 27017
+}
+db = MongoEngine()
+db.init_app(app)
+
+db.createCollection('Bananas')
+
 
 @dataclass
 class Ingredient:
