@@ -1,20 +1,29 @@
 from dataclasses import dataclass
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, jsonify
 from pymongo import MongoClient
+from bson import ObjectId
 import json
 
 app = Flask(__name__)
 client = MongoClient('localhost', 27017)
 db = client['recipe_db']
-collection = db['tags']
 
-collection.insert_one({'name':'banana_pudding'})
+tags_collection = db['tags']
+recipe_collection = db['recipes']
+
+def get_data(data):
+    """
+    got this method/solution for mongoDB->json convertion from https://stackoverflow.com/a/63206156
+    :param data: a MongoDB document
+    :return: the document in a jsonify-able format
+    """
+    data['_id'] = str(data['_id'])
+    return data
 
 @dataclass
 class Ingredient:
     """
     The Ingredient class holds all the information for a single ingredient.
-    Has a method to initialize and one to convert itself to a dictionary.
     """
     name: str
     amount: int
@@ -24,7 +33,7 @@ class Ingredient:
 class Recipe:
     """
     The Recipe class holds all the information about a recipe.
-    Has methods for initializing and turning into a dict.
+    Has custom method for  turning into a dict.
     """
     #idKey: int                  #IDs are currently simple integer indexes
     name: str
@@ -33,6 +42,21 @@ class Recipe:
     servings: int
     ingredients: []
     steps: [str]
+
+    def dictify(self):
+        ingredientsDictList = []
+        for ingredient in self.ingredients:
+            ingredientsDictList.append(ingredient.__dict__)
+
+        dictVersion = {
+            "name": self.name,
+            "tags": self.tags,
+            "timeToMake": self.timeToMake,
+            "servings": self.servings,
+            "ingredients": ingredientsDictList,
+            "steps": self.steps
+        }
+        return dictVersion
 
 #Vars currently holding all the data
 Recipes = []
@@ -60,6 +84,11 @@ testRecipe2 = Recipe("Cereal", ["breakfast", "dinner", "lunch"], 0.1, 1, testIng
 Recipes.append(testRecipe)
 Recipes.append(testRecipe2)
 
+#used for adding/removing the two test recipes
+#recipe_collection.delete_many({'servings':{"$exists": True}})
+#recipe_collection.insert_many([x.dictify() for x in Recipes])
+
+print(recipe_collection.find_one({}, {"_id":True}))
 
 @app.route("/", methods = ["GET"])
 def index():
@@ -67,17 +96,17 @@ def index():
 
 @app.route("/recipes")
 def recipes():
-    return Recipes #TODO: should be a list or smth of the names from the database
+    return jsonify([get_data(i) for i in recipe_collection.find()])
 
 @app.route("/recipes/<recipe_id>")
 def recipeID(recipe_id):
-    return Recipes[int(recipe_id)].__dict__
+    return jsonify(get_data(recipe_collection.find_one(ObjectId(str(recipe_id)))))
 
 @app.route("/submit", methods = ["Get","POST"])
 def newRecipe():
     j = request.get_json()
     Recipes.append(Recipe(**j))
-    return "Recipe added!"
+    return "Recipe added!" #TODO: change this to add to the database instead of array
 
 if __name__ == "__main__":
     app.run(debug=True)
