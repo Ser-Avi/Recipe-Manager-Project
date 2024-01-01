@@ -11,6 +11,8 @@ db = client['recipe_db']
 tags_collection = db['tags']
 recipe_collection = db['recipes']
 
+tags_collection.delete_many({})
+
 def get_data(data):
     """
     got this method/solution for mongoDB->json convertion from https://stackoverflow.com/a/63206156
@@ -19,6 +21,13 @@ def get_data(data):
     """
     data['_id'] = str(data['_id'])
     return data
+
+def tagManager(tag:str, recipe_id):
+    curr = tags_collection.find_one({'tag':tag})
+    if curr is None:
+        tags_collection.insert_one({'tag': tag, 'ids': [recipe_id]})
+    else:
+        tags_collection.update_one({'tag':tag},{"$set":{"ids": curr.get('ids') + [recipe_id]}})
 
 @dataclass
 class Ingredient:
@@ -88,8 +97,6 @@ Recipes.append(testRecipe2)
 #recipe_collection.delete_many({'servings':{"$exists": True}})
 #recipe_collection.insert_many([x.dictify() for x in Recipes])
 
-print(recipe_collection.find_one({}, {"_id":True}))
-
 @app.route("/", methods = ["GET"])
 def index():
     return "Hello" #TODO: figure out if this should lead to anything
@@ -105,8 +112,11 @@ def recipeID(recipe_id):
 @app.route("/submit", methods = ["Get","POST"])
 def newRecipe():
     j = request.get_json()
-    Recipes.append(Recipe(**j))
-    return "Recipe added!" #TODO: change this to add to the database instead of array
+    recipe_collection.insert_one(j)
+    curr_id = get_data(recipe_collection.find_one(j)).get('_id')
+    for tag in j.get('tags'):
+        tagManager(tag, curr_id)
+    return "Recipe added!"
 
 if __name__ == "__main__":
     app.run(debug=True)
