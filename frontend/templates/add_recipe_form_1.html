@@ -1,0 +1,11 @@
+{% extends 'add_recipe_page.html' %}
+
+{% block add_recipe_form %} 
+<form action="/add_recipe/steps/2" method="post" id="add_recipe_1_form" class="max-w-sm mx-auto self-center flex flex-col">
+  <label for="name" class="block mb-2 text-l text-black font-bold">Recipe name</label>
+  <input type="text" id="name" name="name" class="mb-4" required></input>
+  {% include 'tags.html' %}
+</form>
+<input form="add_recipe_1_form" type="submit" value="Next" class="recipe-button self-end m-8">
+{% endblock %}
+

@@ -1,0 +1,34 @@
+<div id="tags">
+  <label for="tag" class="block mb-2 text-l text-black font-bold">Tags</label>
+  <div class="flex items-center">
+    <input type="text" id="tag" name="tag"></input>
+    <button type="button" hx-post="/add_tag" hx-swap="outerHTML" hx-target="#tags" class="recipe-button bg-[#FF7A5C] mx-4">Add</button>
+  </div>
+  {% set seen_tags = [] %}
+  {% for tag in tags %}
+  {% if tag in seen_tags%}
+  <p class="text-red-600">You have already added the tag!</p>
+  {% else %}
+  {% set _ = seen_tags.append(tag) %}
+  {% endif %}
+  {% endfor %}
+  {% if "" in tags %}
+  <p class="text-red-600">Please provide a tag name!</p>
+  {% endif %}
+  <div class="overflow-y-auto max-h-48 mt-8">
+    {% set seen_tags = [] %}
+    {% for tag in tags %}
+    {% if tag != "" %}
+    {% if tag in seen_tags%}
+    {% else %}
+    {% set _ = seen_tags.append(tag) %}
+    <div class="flex items-center justify-between">
+      <input type="text" name="tag" value="{{ tag }}" tabindex="-1" class="readonly" readonly>
+      <button type="button" tabindex="-1" hx-delete="/delete_tag/{{ tag }}" hx-swap="outerHTML" hx-trigger="click" hx-target="#tags" class="self-end recipe-button bg-[#FF7A5C] px-2 py-1 m-2">X</button>
+    </div>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
+

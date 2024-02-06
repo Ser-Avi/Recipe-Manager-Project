@@ -1,0 +1,12 @@
+{% extends 'add_recipe_page.html' %}
+
+{% block add_recipe_form %} 
+<form action="/add_recipe/steps/3" method="post" id="add_recipe_2_form" class="max-w-sm mx-auto self-center flex flex-col">
+  <input type="hidden" id="name" name="name" value="{{ name }}">
+  {% for tag in tags %}
+  <input type="hidden" id="tag" name="tag" value="{{ tag }}">
+  {% endfor %}
+  {% include 'ingredients.html' %}
+</form>
+<input form="add_recipe_2_form" type="submit" value="Next" class="recipe-button self-end m-8">
+{% endblock %}

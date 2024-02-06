@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<main class="m-8 flex flex-wrap justify-center" >
+  {% for recipe in recipes %}
+  <article class="h-96 border-black border-2 w-64 rounded-lg m-8">
+    <img class="rounded-t-lg" src="https://picsum.photos/256">
+    <div class="flex m-4 justify-between items-center">
+      <h2 class="font-bold text-lg">{{ recipe.name }}</h2>
+      <h2 class="italic">{{ recipe.timeToMake }}</h2>
+    </div>
+    <div class="flex flex-wrap m-4">
+      {% for tag in recipe.tags %}
+      <p class="py-1 px-2  bg-red-400 rounded-full text-sm">{{ tag }}</p>
+      {% endfor %}
+    </div>
+  </article>
+  {% endfor %}
+</main>
+{% endblock %}
