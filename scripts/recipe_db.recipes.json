@@ -1,0 +1,25 @@
+[{
+  "_id": {
+    "$oid": "65c2a7064c9227672f57817a"
+  },
+  "name": "Rizs",
+  "timeToMake": "20 minutes",
+  "servings": 4,
+  "tags": [
+    "vegan"
+  ],
+  "ingredients": [
+    {
+      "name": "Rizs",
+      "amount": 1,
+      "measurement": "cup"
+    }
+  ],
+  "steps": [
+    "Öblítsd át a rizst",
+    "Tedd fel forrni 1.5 - 2 pohár vízzel",
+    "Várd meg amíg felforr a víz, majd tekerd le a gázt a legalsó fokozatra",
+    "Várd meg, amíg a víz felszívódik. Ezalatt az idő alatt ne emeld fel a fedőt! Majd zárd el a gázt",
+    "Várj 10 percet, ezalatt ne emeld meg a fedőt"
+  ]
+}]
