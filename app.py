@@ -1,81 +1,70 @@
-from dataclasses import dataclass
-from flask import Flask, request, redirect, send_from_directory
+from flask import Flask, send_from_directory, render_template, request, abort
+import requests
 import json
+import uuid
 
-app = Flask(__name__)
 
-@dataclass
-class Ingredient:
-    """
-    The Ingredient class holds all the information for a single ingredient.
-    Has a method to initialize and one to convert itself to a dictionary.
-    """
-    name: str
-    amount: int
-    measurement: str
-
-@dataclass
-class Recipe:
-    """
-    The Recipe class holds all the information about a recipe.
-    Has methods for initializing and turning into a dict.
-    """
-    #idKey: int                  #IDs are currently simple integer indexes
-    name: str
-    tags: [str]
-    timeToMake: float
-    servings: int
-    ingredients: []
-    steps: [str]
-
-#Vars currently holding all the data
-Recipes = []
-
-#Testing code
-#Recipe for a simple pasta dish
-testIngredient1 = Ingredient("Pasta", 1, "bunch")
-testIngredient2 = Ingredient("Sauce", 1, "can")
-testIngredient3 = Ingredient("Water", 8, "cups")
-testIngredients = []
-testIngredients.extend([testIngredient1, testIngredient2, testIngredient3])
-testSteps = ["Bring the water to a boil and start heating up the sauce", "Put the past in the water for 6 minutes",
-             "Drain the pasta and mix it into the sauce", "Serve with some grated Parmigiano Reggiano"]
-testRecipe = Recipe("Pasta with Sauce", ["entree", "Italian"], 0.20, 2, testIngredients, testSteps)
-
-#Recipe for a reliable meal
-testIngredient4 = Ingredient("Cereal", 2, "cups")
-testIngredient5 = Ingredient("Whole Milk", 0.4, "liters")
-testIngredients2 = []
-testIngredients2.extend([testIngredient4, testIngredient5])
-testSteps2 = ["Put cereal in bowl.", "Pour milk over cereal until the milk level is slightly below the top of the cereal.",
-             "Serve immediately."]
-testRecipe2 = Recipe("Cereal", ["breakfast", "dinner", "lunch"], 0.1, 1, testIngredients2, testSteps2)
-
-Recipes.append(testRecipe)
-Recipes.append(testRecipe2)
+app = Flask(__name__, static_url_path='/static')
 
 
 @app.route("/", methods = ["GET"])
 def index():
-    return send_from_directory('static', "index.html")
+    recipes = requests.get("http://localhost:4200/recipes").json()
 
-@app.route("/add_recipe", methods = ["GET"])
-def add_recipe():
-    return send_from_directory('static', "add_recipe.html")
+    return render_template("recipe_list_page.html", recipes=recipes)
 
-@app.route("/recipes")
-def recipes():
-    return Recipes #TODO: should be a list or smth of the names from the database
 
-@app.route("/recipes/<recipe_id>")
-def recipeID(recipe_id):
-    return Recipes[int(recipe_id)].__dict__
+@app.route("/add_recipe/steps/1", methods = ["GET"])
+def add_recipe_step_1():
+    return render_template("add_recipe_form_1.html", form_title="Please provide the name of the recipe and add tags to it")
 
-@app.route("/submit", methods = ["Get","POST"])
-def newRecipe():
-    j = request.get_json()
-    Recipes.append(Recipe(**j))
-    return "Recipe added!"
 
-if __name__ == "__main__":
-    app.run(debug=True)
+@app.route("/add_recipe/steps/2", methods = ["POST"])
+def add_recipe_step_2():
+    tags = request.form.getlist("tag")
+    tags.pop(0) # Removes the tag written in the text input at the time of the delete
+    name = request.form.get("name")
+
+    return render_template('add_recipe_form_2.html', tags=tags, name=name, form_title="Please add the ingredients")
+
+
+@app.route("/add_tag", methods = ["POST"])
+def add_tag():
+    tags = request.form.getlist('tag')
+
+    return render_template('tags.html', tags=tags)
+
+
+@app.route("/delete_tag/<tag_name>", methods = ["DELETE"])
+def delete_tag(tag_name):
+    tags = request.form.getlist('tag')
+
+    tags.remove(tag_name)
+    tags.pop(0) # Removes the tag written in the text input at the time of the delete
+
+    return render_template('tags.html', tags=tags)
+
+
+@app.route("/add_ingredient", methods = ["POST"])
+def add_ingredient():
+    name = request.form.get("ingredient_name")
+    amount = request.form.get("amount")
+    measurement = request.form.get("measurement")
+
+    ingredient = f"{name} - {amount} {measurement}"
+
+    ingredients = request.form.getlist('ingredient')
+
+    if name != "" and amount != "":
+        ingredients.append(ingredient)
+
+    return render_template('ingredients.html', ingredients=ingredients, ingredient_name=name, amount=amount)
+
+
+@app.route("/delete_ingredient/<ingredient>", methods = ["DELETE"])
+def delete_ingredient(ingredient):
+    ingredients = request.form.getlist('ingredient')
+    ingredients.remove(ingredient)
+
+    return render_template('ingredients.html', ingredients=ingredients)
+
