@@ -7,7 +7,7 @@ app = Flask(__name__, static_url_path='/static')
 
 @app.route("/", methods = ["GET"])
 def index():
-    recipes = requests.get("http://localhost:4200/recipes").json()
+    recipes = requests.get("http://backend:4200/recipes").json()
 
     return render_template("recipe_list_page.html", recipes=recipes)
 

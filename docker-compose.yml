@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  frontend:
+    image: recipe_page_app:latest
+    ports:
+      - "4280:4280"
+    networks:
+      - frontend_network
+    depends_on:
+      - backend
+
+  backend:
+    image: recipe_page_api:latest
+    ports:
+      - "4200:4200"
+    networks:
+      - frontend_network
+      - backend_network
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - backend_network
+    volumes:
+      - mongodb-data:/data/db
+
+networks:
+  frontend_network:
+  backend_network:
+
+volumes:
+  mongodb-data:
+
