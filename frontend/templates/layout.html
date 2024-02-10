@@ -21,11 +21,12 @@
         </p>
       </a>
     </h1>
-    <a href="/add_recipe/steps/1" class="mr-8 ml-4">
-      <button class="recipe-button whitespace-nowrap" type="button">Add recipe</button>
-    </a>
+    <form action="/add_recipe/steps/1" class="mr-8 ml-4">
+      <input class="recipe-button whitespace-nowrap" type="submit" value="Add Recipe" />
+    </form>
   </nav>
   {% block content %} {% endblock %}
 </body>
 
 </html>
+
