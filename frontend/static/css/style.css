@@ -40,6 +40,8 @@ input:read-only {
   border: none
 }
 
+[x-cloak] { display: none !important; }
+
 .recipe-button {
   background-color: #FF7A5C !important;
   font-weight: bold;
@@ -59,7 +61,7 @@ input:read-only {
 }
 
 .recipe-button:active {
-  background-color: #C63C1D;
+  background-color: #C63C1D !important;
   box-shadow: 0px 0px #000;
   transform: translateY(4px) translateX(4px);
 }

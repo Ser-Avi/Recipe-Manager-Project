@@ -2,9 +2,34 @@
 
 {% block add_recipe_form %} 
 <form action="/add_recipe/steps/2" method="post" id="add_recipe_1_form" class="max-w-sm mx-auto self-center flex flex-col">
+
   <label for="name" class="block mb-2 text-l text-black font-bold">Recipe name</label>
   <input type="text" id="name" name="name" class="mb-4" required></input>
-  {% include 'tags.html' %}
+
+  <div id="tags" x-data="{tags: [], tag: '', isDuplicate: undefined, isEmpty: undefined}">
+
+    <label for="tag" class="block mb-2 text-l text-black font-bold">Tags</label>
+    <div class="flex items-center">
+      <input type="text" id="tag" name="tag" x-model="tag"></input>
+      <button type="button" @click="isEmpty = tag === ''; isDuplicate = tags.filter(t => t.toLowerCase() === tag.toLowerCase()).length > 0; if (isEmpty || isDuplicate) {return;}; tags.push(tag); tag=''" class="recipe-button bg-[#FF7A5C] mx-4">Add</button>
+    </div>
+
+    <div x-cloak>
+      <p x-show="isDuplicate" x-transition class="text-red-600">You have already added the tag!</p>
+      <p x-show="isEmpty && !isDuplicate" x-transition class="text-red-600">Please provide a tag name!</p>
+    </div>
+
+    <div class="overflow-y-auto max-h-48 mt-8">
+      <template x-for="(tag, index) in tags" :key="index">
+      <div class="flex items-center justify-between">
+        <input type="text" name="tag" x-model="tag" tabindex="-1" class="readonly" readonly>
+        <button type="button" tabindex="-1" @click="tags.splice(index, 1)" class="self-end recipe-button bg-[#FF7A5C] px-2 py-1 m-2">X</button>
+      </template>
+      </div>
+    </div>
+
+  </div>
+
 </form>
 <input form="add_recipe_1_form" type="submit" value="Next" class="recipe-button self-end m-8">
 {% endblock %}
