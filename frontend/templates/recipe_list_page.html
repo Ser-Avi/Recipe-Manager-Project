@@ -6,7 +6,11 @@
   <article class="h-96 border-black border-2 w-64 rounded-lg m-8">
     <img class="rounded-t-lg" src="https://picsum.photos/256">
     <div class="flex m-4 justify-between items-center">
-      <h2 class="font-bold text-lg">{{ recipe.name }}</h2>
+      <h2 class="font-bold text-lg">
+        <a href="/recipes/{{recipe._id}}">
+          {{ recipe.name }}
+        </a>
+      </h2>
       <h2 class="italic">{{ recipe.timeToMake }}</h2>
     </div>
     <div class="flex flex-wrap m-4">

@@ -12,6 +12,13 @@ def index():
     return render_template("recipe_list_page.html", recipes=recipes)
 
 
+@app.route("/recipes/<recipe_id>", methods = ["GET"])
+def get_recipes(recipe_id):
+    recipe = requests.get(f"http://backend:4200/recipes/{recipe_id}").json()
+
+    return render_template("recipe_details.html", recipe=recipe)
+
+
 @app.route("/add_recipe/steps/1", methods = ["GET"])
 def add_recipe_step_1():
     return render_template("add_recipe_form_1.html", form_title="Please provide the name of the recipe and add tags to it")
