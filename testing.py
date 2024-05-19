@@ -1,5 +1,5 @@
 from data import *
-from app import *
+from api import *
 
 #Vars currently holding all the data
 Recipes = []

@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from flask import jsonify
 from pymongo import MongoClient
 from bson import ObjectId
+from aws import generate_urls
+import json
 
 #Initializing vars
 client = MongoClient('mongodb', 27017)
@@ -24,6 +26,11 @@ def get_recipe(id:str):
     return get_data(recipe_collection.find_one(ObjectId(id)))
 
 def add_recipe(recipe_json):
+    recipe_dict = json.loads(recipe_json)
+    image_urls = generate_urls(recipe_dict["step_pictures"], recipe_dict["name"])
+    recipe_dict["step_pictures"] = image_urls
+    recipe_json = json.dumps(recipe_dict)
+
     recipe_collection.insert_one(recipe_json)
     curr_id = get_data(recipe_collection.find_one(recipe_json)).get('_id')
     for tag in recipe_json.get('tags'):
@@ -59,6 +66,7 @@ class Recipe:
     servings: int
     ingredients: []
     steps: [str]
+    step_pictures: [str]
 
     def dictify(self):
         ingredientsDictList = []
@@ -71,6 +79,7 @@ class Recipe:
             "timeToMake": self.timeToMake,
             "servings": self.servings,
             "ingredients": ingredientsDictList,
-            "steps": self.steps
+            "steps": self.steps,
+            "step_pictures": self.step_pictures
         }
         return dictVersion

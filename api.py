@@ -15,7 +15,7 @@ def recipes():
 def recipeID(recipe_id):
     return jsonify(get_recipe(str(recipe_id)))
 
-@app.route("/submit", methods = ["Get","POST"])
+@app.route("/submit", methods = ["GET","POST"])
 def newRecipe():
     try:
         Recipe(**request.get_json())
