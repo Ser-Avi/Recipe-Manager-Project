@@ -6,6 +6,6 @@ COPY . /app
 
 RUN pip3 install --trusted-host pypi.python.org -r requirements.txt
 
-EXPOSE 4200
+EXPOSE 4280
 
-CMD ["python3", "-m", "flask", "--app", "api.py", "run", "--host=0.0.0.0", "--port=4200"]
+CMD ["python3", "-m", "flask", "--app", "app.py", "run", "--host=0.0.0.0", "--port=4280"]

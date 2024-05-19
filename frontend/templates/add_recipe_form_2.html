@@ -1,0 +1,50 @@
+{% extends 'add_recipe_page.html' %}
+
+{% block add_recipe_form %} 
+<form action="/add_recipe/steps/3" method="post" id="add_recipe_2_form" class="max-w-sm mx-auto self-center flex flex-col mb-16">
+
+  <input type="hidden" id="name" name="name" value="{{ name }}">
+  {% for tag in tags %}
+  <input type="hidden" id="tag" name="tag" value="{{ tag }}">
+  {% endfor %}
+
+  <div id="ingredients" x-data="{ingredients: [], name: '', amount: '', measurement: 'kg', isDuplicate: undefined, hasName: undefined, hasAmount: undefined}">
+
+    <label for="ingredient_name" class="block mb-2 text-l text-black font-bold">Ingredient name</label>
+    <input type="text" id="ingredient_name" name="ingredient_name" class="mb-4" x-model="name"></input>
+
+    <label for="amount" class="block mb-2 text-l text-black font-bold">Amount</label>
+    <div class="flex flex-row justify-between items-center">
+      <input type="number" min="0" id="amount" name="amount" x-model="amount" />
+      <select id="measurement" name="measurement" x-model="measurement" class="mx-4" required>
+        <option value="kg">kg</option>
+        <option value="lbs">lbs</option>
+        <option value="l">l</option>
+        <option value="dkg">dkg</option>
+        <option value="g">g</option>
+        <option value="tbsp">tbsp</option>
+        <option value="tsp">tsp</option>
+      </select>
+      <button type="button" @click="isDuplicate = ingredients.filter(i => i.name.toLowerCase() === name.toLowerCase()).length > 0; hasName = name !== ''; hasAmount = amount !== ''; if (isDuplicate || !hasName || !hasAmount) {return;}; ingredients.push({name: name, amount: amount, measurement: measurement}); name = ''; amount = ''; measurement = 'kg';" class="recipe-button mr-4">Add</button>
+    </div>
+
+    <div x-cloak>
+      <p x-show="isDuplicate" x-transition class="text-red-600">You have already added the ingredient!</p>
+      <p x-show="hasName !== undefined && !hasName" x-transition class="text-red-600">Please provide the ingredient name!</p>
+      <p x-show="hasAmount !== undefined && !hasAmount" x-transition class="text-red-600">Please provide the amount!</p>
+    </div>
+
+    <div class="overflow-y-auto max-h-48 mt-8">
+      <template x-for="(ingredient, index) in ingredients" :key="index">
+        <div class="flex items-center justify-between">
+          <input type="text" name="ingredient" x-model="`${ingredient.name} - ${ingredient.amount} ${ingredient.measurement}`" tabindex="-1" class="readonly" readonly>
+          <button type="button" @click="ingredients.splice(index, 1)" class="self-end recipe-button px-2 py-1 mx-4 my-2">X</button>
+        </div>
+      </template>
+    </div>
+  </div>
+
+</form>
+<input form="add_recipe_2_form" type="submit" value="Next" class="recipe-button self-end">
+{% endblock %}
+
