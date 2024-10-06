@@ -1,0 +1,40 @@
+{% extends 'add_recipe_page.html' %}
+
+{% block add_recipe_form %} 
+<form hx-post="/add_recipe/overview" hx-push-url="/add_recipe/overview" hx-target="#form-body" hx-swap="innerHTML" id="add_recipe_4_form" class="max-w-sm mx-auto self-center flex flex-col mb-16">
+
+  <input type="hidden" id="name" name="name" value="{{ name }}">
+  {% for tag in tags %}
+    <input type="hidden" id="tag" name="tag" value="{{ tag }}">
+  {% endfor %}
+  {% for ingredient in ingredients %}
+    <input type="hidden" id="ingredient" name="ingredients" value="{{ ingredients }}">
+  {% endfor %}
+  <input type="hidden" id="servings" name="servings" value="{{ servings }}">
+  <input type="hidden" id="hours" name="hours" value="{{ time_to_make_hours }}">
+  <input type="hidden" id="minutes" name="minutes" value="{{ time_to_make_minutes }}">
+
+  <div id="steps" x-data="{steps: [], step: '', isDuplicate: undefined, isEmpty: undefined}">
+    <label for="step" class="block mb-2 text-l text-black font-bold">Steps</label>
+    <div class="flex items-center">
+      <textarea rows="3" id="step" name="step" x-model="step"></textarea>
+      <button type="button" @click="isEmpty = step === ''; isDuplicate = steps.filter(t => t.toLowerCase() === step.toLowerCase()).length > 0; if (isEmpty || isDuplicate) {return;}; steps.push(step); step=''" class="recipe-button mx-4">Add</button>
+    </div>
+
+    <div x-cloak>
+      <p x-show="isDuplicate" x-transition class="text-red-600">You have already added the step!</p>
+      <p x-show="isEmpty && !isDuplicate" x-transition class="text-red-600">Please provide a step name!</p>
+    </div>
+
+    <div class="overflow-y-auto max-h-48 mt-8">
+      <template x-for="(step, index) in steps" :key="index">
+        <div class="flex items-center justify-between">
+          <textarea name="step" x-model="step" rows="1" tabindex="-1" class="readonly" readonly></textarea>
+          <button type="button" @click="steps.splice(index, 1)" class="self-end recipe-button px-2 py-1 mx-4 my-2">X</button>
+        </div>
+      </template>
+    </div>
+  </div>
+</form>
+<input form="add_recipe_4_form" type="submit" value="Next" class="self-end recipe-button" />
+{% endblock %}
