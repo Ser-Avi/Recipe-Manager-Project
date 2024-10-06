@@ -1,0 +1,26 @@
+<form action="/add_recipe/steps/4" method="post" id="add_recipe_3_form" class="max-w-sm mx-auto self-center flex flex-col mb-16">
+
+  <input type="hidden" id="name" name="name" value="{{ name }}">
+  {% for tag in tags %}
+    <input type="hidden" id="tag" name="tag" value="{{ tag }}">
+  {% endfor %}
+  {% for ingredient in ingredients %}
+    <input type="hidden" id="ingredient" name="ingredients" value="{{ ingredient }}">
+  {% endfor %}
+
+  <label for="servings" class="block mb-2 text-l text-black font-bold">Servings</label>
+  <input type="number" min="1" id="servings" name="servings" class="mb-4" required></input>
+
+  <label for="time-to-make" class="block mb-2 text-l text-black font-bold">Time to make</label>
+  <div class="flex flex-wrap">
+    <div class="flex flex-row items-baseline">
+      <input type="number" min="0" id="hours" name="hours" class="mb-4 max-w-16" required></input>
+      <p class="ml-2 mr-6">hours</p>
+    </div>
+    <div class="flex flex-row items-baseline">
+      <input type="number" min="0" max="59" id="minutes" name="minutes" class="mb-4 max-w-16" required></input>
+      <p class="mx-2">minutes</p>
+    </div>
+  </div>
+</form>
+<input form="add_recipe_3_form" type="submit" value="Next" class="recipe-button self-end">
