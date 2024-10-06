@@ -1,0 +1,32 @@
+{
+	"ingredients": [
+		{
+			"amount": 1,
+			"measurement": "bunch",
+			"name": "Pasta"
+		},
+		{
+			"amount": 1,
+			"measurement": "can",
+			"name": "Sauce"
+		},
+		{
+			"amount": 8,
+			"measurement": "cups",
+			"name": "Water"
+		}
+	],
+	"name": "Pasta with Sauce",
+	"servings": 2,
+	"steps": [
+		"Bring the water to a boil and start heating up the sauce",
+		"Put the past in the water for 6 minutes",
+		"Drain the pasta and mix it into the sauce",
+		"Serve with some grated Parmigiano Reggiano"
+	],
+	"tags": [
+		"entree",
+		"Italian"
+	],
+	"timeToMake": 0.2
+}

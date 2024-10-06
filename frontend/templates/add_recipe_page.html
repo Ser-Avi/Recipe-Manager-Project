@@ -1,13 +1,13 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<main class="flex flex-col items-center">
-  <div class="m-8 bg-[#FFF] border-4 border-solid border-black flex flex-col">
+<main class="flex flex-col items-center w-full p-8">
+  <div class="max-w-4xl w-full bg-[#FFF] border-4 border-solid border-black flex flex-col">
     <div id="form-step-content" class="flex flex-col">
       <h2 class="m-8 font-bold text-xl">
         {{ form_title }}
      </h2>
-     <div class="m-8 flex flex-col">
+     <div class="m-8 flex flex-col" id="form-body">
        {% block add_recipe_form %} {% endblock %}
      </div>
     </div>

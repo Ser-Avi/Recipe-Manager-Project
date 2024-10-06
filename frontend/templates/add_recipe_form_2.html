@@ -1,7 +1,4 @@
-{% extends 'add_recipe_page.html' %}
-
-{% block add_recipe_form %} 
-<form action="/add_recipe/steps/3" method="post" id="add_recipe_2_form" class="max-w-sm mx-auto self-center flex flex-col mb-16">
+<form hx-post="/add_recipe/steps/3" hx-push-url="/add_recipe/steps/3" hx-target="#form-body" hx-swap="innerHTML" id="add_recipe_3_form" class="max-w-sm mx-auto self-center flex flex-col mb-16">
 
   <input type="hidden" id="name" name="name" value="{{ name }}">
   {% for tag in tags %}
@@ -37,7 +34,7 @@
     <div class="overflow-y-auto max-h-48 mt-8">
       <template x-for="(ingredient, index) in ingredients" :key="index">
         <div class="flex items-center justify-between">
-          <input type="text" name="ingredient" x-model="`${ingredient.name} - ${ingredient.amount} ${ingredient.measurement}`" tabindex="-1" class="readonly" readonly>
+          <input type="text" name="ingredients" x-model="`${ingredient.name} - ${ingredient.amount} ${ingredient.measurement}`" tabindex="-1" class="readonly" readonly>
           <button type="button" @click="ingredients.splice(index, 1)" class="self-end recipe-button px-2 py-1 mx-4 my-2">X</button>
         </div>
       </template>
@@ -45,6 +42,5 @@
   </div>
 
 </form>
-<input form="add_recipe_2_form" type="submit" value="Next" class="recipe-button self-end">
-{% endblock %}
+<input form="add_recipe_3_form" type="submit" value="Next" class="recipe-button self-end">
 
